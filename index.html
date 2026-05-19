@@ -6,6 +6,17 @@
     <title>Bình Lợi - The B-Side of Sai Gon</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    /* Đảm bảo bản đồ có chiều cao hiển thị */
+    #map { height: 500px; width: 100%; z-index: 1; }
+    .leaflet-popup-content-wrapper { background: #0a192f; color: white; border: 1px solid #d4af37; }
+    .leaflet-popup-tip { background: #d4af37; }
+    </style>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
         
@@ -91,10 +102,9 @@
             </div>
 
             <!-- Bản đồ hành trình tương tác -->
-            <div class="relative rounded-3xl overflow-hidden glass p-2 mb-12 h-[300px] flex items-center justify-center border-2 border-dashed border-white/20">
-                <p class="text-gray-500 italic"><i class="fa-solid fa-satellite mr-2"></i> Bản đồ tương tác thông minh đang định vị vị trí của bạn...</p>
-                <div class="absolute inset-0 bg-yellow-500/5 pointer-events-none"></div>
-            </div>
+            <div class="max-w-7xl mx-auto px-6 mb-12">
+    <div id="map" class="rounded-3xl border-2 border-yellow-500/30 shadow-2xl"></div>
+<        </div>
         </div>
     </section>
 
@@ -334,6 +344,42 @@
         </div>
         <button onclick="document.getElementById('scanner').classList.add('hidden')" class="absolute top-10 right-10 text-4xl">&times;</button>
     </div>
+    <script>
+    // 1. Khởi tạo bản đồ tại khu vực Bình Lợi, Bình Chánh
+    var map = L.map('map').setView([10.778934, 106.541411], 14);
+
+    // 2. Thêm lớp nền bản đồ (màu sáng hoặc tối tùy chọn)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 3. Danh sách 6 địa điểm (Tọa độ giả định chính xác khu vực Bình Lợi)
+    var locations = [
+        { name: "1. CV Láng Le - Bàu Cò", coords: [10.72124, 106.536242], desc: "Điểm khởi đầu hào khí" },
+        { name: "2. Chùa Thanh Tâm", coords: [10.7819731, 106.5149386], desc: "Không gian chữa lành" },
+        { name: "3. Đình Bình Lợi", coords: [10.7929955, 106.5812130], desc: "Di tích lịch sử văn hóa" },
+        { name: "4. Làng nghề làm nhang", coords: [10.7893483, 106.5761513], desc: "Sắc đỏ truyền thống" },
+        { name: "5. Làng Mai vàng", coords: [10.7582944, 106.4882543], desc: "Sắc vàng thịnh vượng" },
+        { name: "6. Vườn trái cây & Farmstay", coords: [10.7346161, 106.4933830], desc: "Trải nghiệm miệt vườn" }
+    ];
+
+    // 4. Định nghĩa icon tùy chỉnh (Màu vàng cho hợp tông web)
+    var customIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // 5. Thêm các điểm đánh dấu (Markers) vào bản đồ
+    locations.forEach(function(loc) {
+        L.marker(loc.coords, {icon: customIcon})
+            .addTo(map)
+            .bindPopup(`<b style="color:#d4af37">${loc.name}</b><br>${loc.desc}`);
+    });
+<</script>
 
 </body>
 </html>
